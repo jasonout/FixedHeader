@@ -259,6 +259,7 @@ FixedHeader.prototype = {
 		$(window).on('resize' + this._eventNamespace, resizeHandler);
 
 		$(s.nTable)
+			.addClass('dtFixedHeader');
 			.on('column-reorder.dt' + this._eventNamespace, function () {
 				FixedHeader.fnMeasure();
 				that._fnUpdateClones( true );
@@ -950,6 +951,8 @@ FixedHeader.prototype = {
 				FixedHeader.afnScroll.splice( idx );
 			}
 		}
+		
+		dt.removeClass('dtFixedHeader');
 	},
 	
 	/**

@@ -5,3 +5,6 @@ div.FixedHeader_Cloned td {
 	background-color: white !important;
 }
 
+table.dtFixedHeader thead {
+	visibility:hidden;
+}
