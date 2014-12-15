@@ -784,12 +784,12 @@ FixedHeader.prototype = {
 		} );
 
 		$("thead>tr th", s.nTable).each( function (i) {
-			$("thead>tr th:eq("+i+")", nTable).width( a[i] );
+			$("thead>tr th:eq("+i+")", nTable).width( a[i] ).css('min-width', a[i]);
 			$(this).width( a[i] );
 		} );
 
 		$("thead>tr td", s.nTable).each( function (i) {
-			$("thead>tr td:eq("+i+")", nTable).width( b[i] );
+			$("thead>tr td:eq("+i+")", nTable).width( b[i] ).css('min-width', b[i]);
 			$(this).width( b[i] );
 		} );
 
