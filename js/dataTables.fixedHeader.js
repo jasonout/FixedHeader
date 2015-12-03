@@ -250,11 +250,20 @@ FixedHeader.prototype = {
 			that._fnUpdatePositions.call(that);
 		};
 
+		var $scrollContainer = $(s.nTable).parent().parent();
+		var containerScrollHandler = function () {
+			if ($scrollContainer.css('overflow-x') == 'auto') {
+				$(window).scroll();
+			}
+		}
+
 		/* Keep track of event handler for possible removal later */
 		this.scrollHandler = scrollHandler;
+		this.containerScrollHandler = containerScrollHandler;
 
 		/* Event listeners for window movement */
 		FixedHeader.afnScroll.push( scrollHandler );
+		$scrollContainer.scroll(containerScrollHandler);
 
 		$(window).on('resize' + this._eventNamespace, resizeHandler);
 
@@ -659,9 +668,14 @@ FixedHeader.prototype = {
 			oMes = s.oMes,
 			oWin = FixedHeader.oWin,
 			oDoc = FixedHeader.oDoc,
+			nOriginalTable = s.nNode,
 			nTable = oCache.nWrapper,
 			iTbodyHeight = 0,
 			anTbodies = s.nTable.getElementsByTagName('tbody');
+
+		var $wrapper = $(nOriginalTable).parent().parent();
+		var overflow = $wrapper.css('overflow-x');
+		var isScrolling = overflow && overflow != 'visible';
 
 		for (var i = 0; i < anTbodies.length; ++i) {
 			iTbodyHeight += anTbodies[i].offsetHeight;
@@ -686,7 +700,7 @@ FixedHeader.prototype = {
 			/* In the middle of the table */
 			this._fnUpdateCache( oCache, 'sPosition', 'fixed', 'position', nTable.style );
 			this._fnUpdateCache( oCache, 'sTop', s.oOffset.top+"px", 'top', nTable.style );
-			this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft-oWin.iScrollLeft)+"px", 'left', nTable.style );
+			this._fnUpdateCache( oCache, 'sLeft', (oMes.iTableLeft-(isScrolling?0:oWin.iScrollLeft))+"px", 'left', nTable.style );
 		}
 	},
 
@@ -951,7 +965,8 @@ FixedHeader.prototype = {
 				FixedHeader.afnScroll.splice( idx );
 			}
 		}
-		
+
+		dt.parent().parent().off('scroll', this.containerScrollHandler);
 		dt.removeClass('dtFixedHeader');
 	},
 	
